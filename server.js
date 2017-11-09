@@ -31,8 +31,11 @@ app.get('/api/v1/books', (req, res) => {
     .catch(console.error);
 });
 
-//This is a redirect
-app.get('*', (req, res) => res.redirect(CLIENT_URL));
+app.get('/api/v1/books:id', (req, res) => {
+  client.query(`SELECT * FROM books WHERE book_id=${req.params.id}`)
+    .then(results => res.send(results.rows))
+    .catch(console.error);
+});
 
 //This is supposed to add a new book to the database, but something isn't working either here or in the functions for it.
 app.post('/api/v1/books', bodyParser, (req, res) => {
@@ -46,5 +49,8 @@ app.post('/api/v1/books', bodyParser, (req, res) => {
     .then(res.sendStatus(201))
     .catch(console.error);
 });
+
+//This is a redirect
+app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
