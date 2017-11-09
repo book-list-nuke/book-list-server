@@ -10,10 +10,11 @@ const bodyParser = require('body-parser').urlencoded({extended: true});
 const app = express();
 const PORT = process.env.PORT;
 const CLIENT_URL = process.env.CLIENT_URL;
+const TOKEN = process.env.TOKEN;
 
 //Setting up our database
-const client = new pg.Client(process.env.DATABASE_URL);
-// const client = new pg.Client('postgres://localhost:5432/books_app');
+// const client = new pg.Client(process.env.DATABASE_URL);
+const client = new pg.Client('postgres://localhost:5432/books_app');
 client.connect();
 client.on('error', err => console.error(err));
 
@@ -21,8 +22,6 @@ client.on('error', err => console.error(err));
 app.use(cors());
 
 //Endpoints below here
-//Test route
-app.get('/test', (req, res) => res.send('This is a test route'))
 
 //Getting stuff from the database to render on pages
 app.get('/api/v1/books', (req, res) => {
@@ -31,12 +30,15 @@ app.get('/api/v1/books', (req, res) => {
     .catch(console.error);
 });
 
-//This is a redirect
-app.get('*', (req, res) => res.redirect(CLIENT_URL));
+app.get('/api/v1/books/:book_id', (req, res) => {
+  console.log('inside the book id get');
+  client.query(`SELECT * FROM books WHERE book_id=${req.params.book_id}`)
+    .then(results => res.send(results.rows))
+    .catch(console.error);
+});
 
-//This is supposed to add a new book to the database, but something isn't working either here or in the functions for it.
+//Adding a book to the database
 app.post('/api/v1/books', bodyParser, (req, res) => {
-  console.log(req.body);
   let {title, author, isbn, image_url, description} = req.body;
 
   client.query(`
@@ -46,5 +48,11 @@ app.post('/api/v1/books', bodyParser, (req, res) => {
     .then(res.sendStatus(201))
     .catch(console.error);
 });
+
+//Admin token
+app.get('/admin', (req, res) => res.send(TOKEN === parseInt(req.query.token)))
+
+//This is a redirect
+app.get('*', (req, res) => res.redirect(CLIENT_URL));
 
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
