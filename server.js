@@ -17,6 +17,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+app.get('/test', (req, res) => res.send('hello world'))
+
 app.get('/api/v1/books', (req, res) => {
   client.query(`SELECT book_id, author, title, isbn, image_url FROM books;`)
     .then(results => res.send(results.rows))
