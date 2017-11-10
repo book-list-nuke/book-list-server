@@ -54,12 +54,11 @@ app.post('/api/v1/books', bodyParser, (req, res) => {
 app.get('/admin', (req, res) => res.send(TOKEN === parseInt(req.query.token)))
 
 //Delete a book
-
 app.delete('/api/v1/books/:book_id', (req, res) => {
   client.query(`
     DELETE FROM books
-    WHERE book_id=${req.params.book_id};`)
-    .then(() => res.send('Delete complete'))
+    WHERE book_id=${req.params.book_id}`)
+    .then(() => res.send(204))
     .catch(console.error);
 });
 
