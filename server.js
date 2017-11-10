@@ -32,7 +32,6 @@ app.get('/api/v1/books', (req, res) => {
 
 //Getting a single book
 app.get('/api/v1/books/:book_id', (req, res) => {
-  console.log('inside the get route for a single book');
   client.query(`SELECT * FROM books WHERE book_id=${req.params.book_id}`)
     .then(results => res.send(results.rows))
     .catch(console.error);
@@ -63,18 +62,17 @@ app.delete('/api/v1/books/:book_id', (req, res) => {
 });
 
 //Update a book
-app.put('/api/v1/books/:book_id'), (req, res) => {
+app.put('/api/v1/books', bodyParser, (req, res) => {
   let {title, author, isbn, image_url, description} = req.body;
-
   client.query(`
     UPDATE books
     SET title=$1, author=$2, isbn=$3, image_url=$4, description=$5
-    WHERE book_id=${req.params.book_id}`,
+    WHERE book_id=${req.body.book_id}`,
   [title, author, isbn, image_url, description]
   )
     .then(res.sendStatus(200))
     .catch(console.error)
-}
+});
 
 //This is a redirect
 app.get('*', (req, res) => res.redirect(CLIENT_URL));
