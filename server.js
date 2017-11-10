@@ -40,7 +40,6 @@ app.get('/api/v1/books/:book_id', (req, res) => {
 //Adding a book to the database
 app.post('/api/v1/books', bodyParser, (req, res) => {
   let {title, author, isbn, image_url, description} = req.body;
-
   client.query(`
       INSERT INTO books(title, author, isbn, image_url, description) VALUES($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING`,
     [title, author, isbn, image_url, description]
