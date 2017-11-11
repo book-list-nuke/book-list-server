@@ -13,8 +13,8 @@ const CLIENT_URL = process.env.CLIENT_URL;
 const TOKEN = process.env.TOKEN;
 
 //Setting up our database
-// const client = new pg.Client(process.env.DATABASE_URL);
-const client = new pg.Client('postgres://localhost:5432/books_app');
+const client = new pg.Client(process.env.DATABASE_URL);
+// const client = new pg.Client('postgres://localhost:5432/books_app');
 client.connect();
 client.on('error', err => console.error(err));
 
