@@ -49,7 +49,9 @@ app.post('/api/v1/books', bodyParser, (req, res) => {
 });
 
 //Admin token
-app.get('/admin', (req, res) => res.send(TOKEN === parseInt(req.query.token)))
+app.get('/api/v1/admin', (req, res) => {
+  res.send(TOKEN === parseInt(req.query.token));
+});
 
 //Delete a book
 app.delete('/api/v1/books/:book_id', (req, res) => {
